@@ -1,0 +1,37 @@
+# used for local development with local database
+version: '3.4'
+
+services:
+  app:
+    container_name: app
+    image: node:12
+    working_dir: /app
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=rapidapi_rls_user
+      - POSTGRES_PASSWORD=rapidapi_rls_user
+      - POSTGRES_DB=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/app
+      - app-node-modules:/app/node_modules
+    command: sh -c 'yarn && node_modules/.bin/wait-on tcp:postgres:5432 && node_modules/.bin/nodemon --inspect=0.0.0.0:9229 .'
+  postgres:
+    container_name: app-postgres
+    image: app-postgres
+    build:
+      context: .
+      dockerfile: ./Dockerfile.db
+    environment:
+      - PGPORT=5432
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-app-data:/var/lib/postgresql/data
+volumes:
+  postgres-app-data:
+  app-node-modules:

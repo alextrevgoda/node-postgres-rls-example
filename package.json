@@ -1,0 +1,27 @@
+{
+  "name": "xxx",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "docker-compose up",
+    "stop": "docker-compose down",
+    "build": "docker-compose build",
+    "reset": "yarn stop; yarn build && yarn db:reset",
+    "db:reset": "docker-compose down && docker volume rm node-js-postgresql-crud-example_postgres-app-data",
+    "db:migrate": "docker-compose run --rm app sh -c 'yarn && node_modules/.bin/wait-on tcp:postgres:5432 && npx sequelize-cli db:migrate'"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "pg": "^7.17.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.6.5",
+    "wait-on": "^6.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12",
+    "sequelize-cli": "^6.2.0"
+  }
+}
